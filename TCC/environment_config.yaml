@@ -1,0 +1,7 @@
+classes:
+- pedestre
+- veiculo
+- calcada
+- degrau
+- obstaculo_suspenso
+- faixa_pedestre

@@ -1,0 +1,14 @@
+[2026-04-04 15:13:33] [ERRO] Não foi possível processar a URL. O vídeo pode estar fora do ar, restrito ou erro de biblioteca. Detalhe: Resolution 720p not available
+[2026-04-04 15:18:47] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: https://www.youtube.com/watch?v=1fH8WXPcltQ
+[2026-04-04 15:25:03] [ERRO] Não foi possível processar a URL. O vídeo pode estar fora do ar, restrito ou erro de biblioteca. Detalhe: Resolution 720p not available
+[2026-04-04 15:38:41] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: https://www.youtube.com/watch?v=1fH8WXPcltQ
+[2026-04-04 15:41:08] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local (Testando CPU/GPU localmente)
+[2026-04-04 15:48:10] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: YouTube: https://www.youtube.com/watch?v=6y5CqAHxGX0
+[2026-04-04 15:48:43] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local
+[2026-04-04 15:49:54] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local
+[2026-04-04 15:51:12] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: YouTube: https://www.youtube.com/watch?v=6y5CqAHxGX0
+[2026-04-04 15:51:54] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local
+[2026-04-04 15:53:19] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local
+[2026-04-04 15:55:57] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local
+[2026-04-04 19:50:34] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: Webcam Local
+[2026-04-04 19:52:06] [SUCESSO] Teste finalizado de maneira saudável. Fonte processada: YouTube: https://www.youtube.com/watch?v=6y5CqAHxGX0
