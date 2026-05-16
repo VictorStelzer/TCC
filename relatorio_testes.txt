@@ -1,0 +1,38 @@
+Relatório de Testes e Setup - Percepção Espacial (TCC)
+======================================================
+Este documento formaliza os testes e abordagens arquiteturais realizadas para a criação de uma camada de Percepção Espacial Geométrica para deficientes visuais. 
+
+O grande desafio do projeto foi manter todo o processamento "on-device" (100% local, sem internet) visando baixa latência e segurança. Como o hardware de testes não possuía suporte nativo à aceleração CUDA (Nvidia GPU), o processamento recaiu estritamente sobre a CPU do sistema.
+
+------------------------------------------------------
+Arquivos Desenvolvidos e Resultados
+------------------------------------------------------
+
+1. check_env.py
+   - Propósito: Validação base de hardware e bibliotecas.
+   - O que foi feito: Script simples para confirmar se o PyTorch carregava as bibliotecas de processamento tensorial e se o OpenCV acessava corretamente os raw streams da câmera.
+   - O que deu certo: Ambiente subiu de primeira. Instalação e binds de C++ via Python confirmados.
+   - O que deu errado/Limitação observada: O teste confirmou que `torch.cuda.is_available()` era falso. Toda a inferência recairia na CPU, exigindo atenção máxima à arquitetura das redes escolhidas.
+
+2. spatial_perception.py (Abordagem 1: MiDaS - Profundidade Relativa)
+   - Propósito: Utilizar uma rede super leve (`MiDaS_small`) para extrair mapas de profundidade rápidos, isolando o terço inferior central da imagem (chão/caminho) para disparar avisos.
+   - O que deu certo: FPS excelente em tempo real. O modelo executou de maneira perfeitamente lisa e ágil, provando a viabilidade do tempo real na CPU se a rede for minúscula.
+   - O que deu errado (Erro Lógico): Como o modelo só trabalha com "Profundidade Relativa", ele não mede metros. Ele apenas colore de branco o que está mais perto. Num campo aberto ou quarto escuro vazio, o chão a 5 metros era detectado como o "obstáculo mais próximo", causando dezenas de falsos positivos (apitos incorretos).
+   - Tentativa de Contorno: Implementamos um algoritmo de normalização robusta (Percentil 95) para evitar que mãos ou braços nas bordas da tela "espremessem" a escala, o que ajudou na estabilidade da cena, mas não contornou o fato de que o modelo não distingue 20 centímetros de 20 metros em espaços abertos.
+
+3. metric_perception.py (Abordagem 2: ZoeDepth - Profundidade Métrica)
+   - Propósito: Corrigir a principal deficiência do arquivo anterior mudando a fundação do sistema de Profundidade Relativa para "Profundidade Métrica Absoluta" (Metric Depth).
+   - O que deu certo (Logicamente): A precisão do sistema ficou excepcional. A IA passou a cuspir uma matriz não mais de cores, mas de metros literais. A regra de ativação ficou estrita e segura: `if distancia_em_metros < 2.0`. Isso sanou totalmente o erro em campos abertos e parou os falsos alarmes.
+   - O que deu errado (Gargalo Físico): O modelo baseia-se em Transformers gigantes (BEiT + DPT). O tempo computacional para resolver a matemática matricial na CPU gerou um FPS ínfimo (basicamente 1 frame por minuto). A aplicação virou um sistema de fotos lentas, o que anula o uso para caminhadas em tempo real.
+
+------------------------------------------------------
+Conclusões
+------------------------------------------------------
+A tentativa de construir um pipeline universal on-device usando visão monocular (sem LiDAR/Laser) revelou que:
+- Profundidade Relativa é RÁPIDA, porém CEGA a métricas reais em espaços abertos, impossibilitando a segurança do deficiente visual.
+- Profundidade Métrica Absoluta é PERFEITA para segurança e confiabilidade, mas os modelos atuais (como ZoeDepth) são monstruosamente pesados para rodar em tempo real num processador (CPU) de laptop comum.
+
+Para os próximos estágios da pesquisa do TCC, as saídas são:
+1. Usar processamento acelerado de hardware (uma placa de vídeo dedicada ou NPUs locais).
+2. Converter os modelos métricos (como o Depth Anything V2) para formatos de C++ ultra otimizados (OpenVINO ou TensorRT).
+3. Adicionar uma camada auxiliar ultrassônica (sensor físico) na bengala para resolver os campos abertos, liberando a câmera só para reconhecer categorias de objetos e não detectar proximidade pura.
